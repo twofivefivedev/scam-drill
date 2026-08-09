@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scam drill: two scams that reach school staff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Archivo:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   THEME — matches the "Staff Notice" slide deck
+   =========================================== */
+:root{
+    --board:#0E2B24; --board-2:#143A30; --board-3:#1B4A3D;
+    --bone:#F3EEE1; --bone-2:#E7DFCC;
+    --kowhai:#F5B921; --rata:#C4472C; --green:#2E7D5B;
+    --ink:#101A16; --ink-soft:#4A5B52;
+    --warm:rgba(243,238,225,.9); --warm-dim:rgba(243,238,225,.6);
+    --hair:rgba(243,238,225,.2);
+    --fd:'Fraunces',serif; --fb:'Archivo',sans-serif; --fm:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--board);color:var(--warm);font-family:var(--fb);min-height:100vh;
+    background-image:
+        repeating-linear-gradient(45deg,rgba(245,185,33,.05) 0 2px,transparent 2px 26px),
+        repeating-linear-gradient(-45deg,rgba(243,238,225,.045) 0 2px,transparent 2px 26px)}
+
+/* ===========================================
+   DRILL BANNER — always visible, never hidden
+   =========================================== */
+.banner{background:var(--kowhai);color:var(--ink);padding:12px 24px;font-family:var(--fm);
+    font-size:13px;letter-spacing:.1em;text-transform:uppercase;text-align:center;position:sticky;top:0;z-index:50}
+.banner b{font-weight:500}
+
+.wrap{max-width:1120px;margin:0 auto;padding:36px 24px 80px}
+
+/* ===========================================
+   PAGE HEADER, SCENARIO PICKER, PROGRESS
+   =========================================== */
+header.top{margin-bottom:28px}
+.eyebrow{font-family:var(--fm);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--kowhai);margin-bottom:12px}
+h1{font-family:var(--fd);font-weight:900;font-size:clamp(30px,4.4vw,52px);line-height:1.02;letter-spacing:-.02em;color:var(--bone)}
+.lede{font-size:18px;line-height:1.5;color:var(--warm-dim);margin-top:14px;max-width:70ch}
+
+.picker{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
+.picker button{flex:1 1 300px;text-align:left;background:var(--board-2);border:1px solid var(--hair);
+    color:var(--warm);padding:20px 22px;cursor:pointer;font-family:var(--fb);transition:background .2s}
+.picker button:hover{background:var(--board-3)}
+.picker button.on{background:var(--kowhai);border-color:transparent;color:var(--ink)}
+.picker .tag{font-family:var(--fm);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--kowhai);display:block;margin-bottom:8px}
+.picker button.on .tag{color:rgba(16,26,22,.65)}
+.picker .name{font-size:20px;font-weight:700;line-height:1.2}
+.picker .desc{font-size:14px;color:var(--warm-dim);margin-top:6px;line-height:1.4}
+.picker button.on .desc{color:rgba(16,26,22,.75)}
+
+.score{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap}
+.score .pips{display:flex;gap:7px}
+.score .pip{width:26px;height:10px;background:var(--hair)}
+.score .pip.on{background:var(--kowhai)}
+.score .label{font-family:var(--fm);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--warm-dim)}
+
+/* ===========================================
+   SCREENS
+   =========================================== */
+.screen{display:none;margin-top:26px}
+.screen.on{display:block;animation:rise .45s cubic-bezier(.2,.7,.3,1)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen.on{animation:none}}
+
+/* ===========================================
+   MAIL CLIENT (scenario 1)
+   =========================================== */
+.mail{background:var(--bone);color:var(--ink);box-shadow:18px 22px 0 rgba(0,0,0,.25)}
+.mail .chrome{background:var(--board);color:var(--warm);padding:12px 20px;display:flex;justify-content:space-between;
+    font-family:var(--fm);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.mail .rows{border-bottom:1px solid rgba(16,26,22,.14)}
+.row{display:grid;grid-template-columns:220px 1fr 110px;gap:16px;padding:18px 22px;align-items:center;
+    border-bottom:1px solid rgba(16,26,22,.1);cursor:pointer}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--bone-2)}
+.row.unread .who,.row.unread .what{font-weight:700}
+.row .who{font-size:16px}
+.row .what{font-size:16px;color:var(--ink)}
+.row .what span{color:var(--ink-soft);font-weight:400}
+.row .when{font-family:var(--fm);font-size:13px;color:var(--ink-soft);text-align:right}
+.row .dot{display:inline-block;width:8px;height:8px;background:var(--rata);margin-right:10px;vertical-align:1px}
+
+.mail .head{padding:24px 26px 18px;border-bottom:1px solid rgba(16,26,22,.14)}
+.mail .subject{font-family:var(--fd);font-weight:700;font-size:28px;line-height:1.15;margin-bottom:14px}
+.mail .from{font-family:var(--fm);font-size:15px;color:var(--ink-soft);word-break:break-all}
+.mail .body{padding:26px;font-size:17px;line-height:1.65;color:var(--ink)}
+.mail .body p{margin-bottom:16px}
+.mail .btn-fake{display:inline-block;background:#1a5fb4;color:#fff;padding:14px 26px;font-weight:600;
+    font-size:16px;text-decoration:none;cursor:pointer;margin:6px 0 18px}
+.mail .sig{font-size:15px;color:var(--ink-soft);border-top:1px solid rgba(16,26,22,.14);padding-top:16px}
+
+/* Clickable warning signs, used in both scenarios */
+.sign{position:relative;cursor:pointer;border-bottom:3px dotted rgba(196,71,44,.55);padding:1px 2px}
+.sign:hover{background:rgba(245,185,33,.35)}
+.sign.found{background:var(--kowhai);border-bottom:3px solid var(--ink);color:var(--ink)}
+.sign.found::after{content:'✓';font-family:var(--fm);font-size:12px;color:var(--ink);
+    position:absolute;top:-14px;right:-6px}
+
+/* Browser-style status strip that reveals a link's true destination */
+.statusbar{background:var(--ink);color:var(--bone);font-family:var(--fm);font-size:14px;
+    padding:10px 20px;min-height:40px;display:flex;align-items:center;gap:12px}
+.statusbar .k{color:var(--kowhai);letter-spacing:.1em;text-transform:uppercase;font-size:11px}
+.statusbar em{font-style:normal;color:#FF9B84}
+
+/* ===========================================
+   PHONE + SMS THREAD (scenario 2)
+   =========================================== */
+.stage{display:grid;grid-template-columns:440px 1fr;gap:36px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:1fr}}
+.phone{background:#0a0a0a;border-radius:46px;padding:13px;box-shadow:18px 22px 0 rgba(0,0,0,.3);max-width:440px}
+.glass{background:#F2F2F7;border-radius:34px;overflow:hidden;color:#000}
+.ios-status{display:flex;justify-content:space-between;padding:12px 24px 6px;font-size:13px;font-weight:600}
+.ios-nav{background:#F9F9F9;border-bottom:1px solid #D8D8DC;padding:10px 16px 14px;text-align:center}
+.ios-nav .avatar{width:44px;height:44px;border-radius:50%;background:#0B6B4F;color:#fff;margin:0 auto 6px;
+    display:grid;place-items:center;font-family:var(--fd);font-weight:900;font-size:17px}
+.ios-nav .name{font-size:15px;font-weight:600}
+.thread{padding:6px 0 18px;min-height:330px;background:#fff}
+.tstamp{text-align:center;font-size:12px;color:#8A8A8E;margin:16px 12px 8px;font-weight:600}
+.bubble{max-width:82%;padding:11px 15px;border-radius:19px;margin:7px 14px;font-size:15.5px;line-height:1.42;
+    white-space:pre-line}
+.bubble.them{background:#E9E9EB;color:#000;border-bottom-left-radius:5px}
+.bubble.me{background:#34C759;color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+.bubble.new{box-shadow:0 0 0 3px rgba(196,71,44,.35)}
+.smslink{color:#007AFF;text-decoration:underline;cursor:pointer}
+.ios-input{background:#F9F9F9;border-top:1px solid #D8D8DC;padding:12px 16px;display:flex;gap:10px;align-items:center}
+.ios-input .box{flex:1;background:#fff;border:1px solid #D8D8DC;border-radius:18px;padding:9px 14px;
+    font-size:14px;color:#8A8A8E}
+
+/* Incoming call overlay */
+.callscreen{background:#1C1C1E;border-radius:34px;color:#fff;padding:52px 28px 34px;text-align:center;min-height:520px;
+    display:flex;flex-direction:column;justify-content:space-between}
+.callscreen .label{font-size:14px;color:#98989E;letter-spacing:.06em}
+.callscreen .who{font-size:30px;font-weight:600;margin-top:10px}
+.callscreen .num{font-family:var(--fm);font-size:15px;color:#98989E;margin-top:8px}
+.callscreen .ring{margin-top:26px;font-size:13px;color:#98989E;letter-spacing:.2em;text-transform:uppercase}
+.callbtns{display:flex;justify-content:space-around;margin-top:40px}
+.callbtns button{width:74px;height:74px;border-radius:50%;border:0;color:#fff;font-size:26px;cursor:pointer}
+.callbtns .no{background:#FF3B30}
+.callbtns .yes{background:#34C759}
+.callbtns span{display:block;font-size:12px;color:#98989E;margin-top:10px}
+.callbtns div{text-align:center}
+.transcript{background:#1C1C1E;border-radius:34px;color:#fff;padding:28px}
+.transcript .who{font-size:15px;color:#98989E;font-family:var(--fm);letter-spacing:.08em;text-transform:uppercase}
+.transcript p{font-size:16px;line-height:1.55;margin:14px 0 0}
+.transcript .code{background:#2C2C2E;padding:16px;margin-top:18px;text-align:center;border-radius:12px}
+.transcript .code b{font-family:var(--fm);font-size:26px;letter-spacing:.2em;color:#FFD60A;display:block;margin-top:6px}
+.transcript .code span{font-size:12px;color:#98989E;letter-spacing:.1em;text-transform:uppercase}
+
+/* ===========================================
+   CHOICES
+   =========================================== */
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:26px}
+.stage .choices{grid-template-columns:1fr;margin-top:0}
+.choice{background:var(--board-2);border:1px solid var(--hair);padding:22px;text-align:left;cursor:pointer;
+    color:var(--warm);font-family:var(--fb);font-size:17px;font-weight:600;line-height:1.35;transition:background .2s}
+.choice:hover{background:var(--board-3);border-color:var(--kowhai)}
+.choice small{display:block;font-weight:400;font-size:14px;color:var(--warm-dim);margin-top:8px}
+
+/* ===========================================
+   FAKE PORTAL / FAKE BANK (clearly a drill, invented brands)
+   =========================================== */
+.browser{background:#d9d5cc;box-shadow:18px 22px 0 rgba(0,0,0,.25)}
+.browser .bar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#c6c1b5}
+.browser .bar .dots{display:flex;gap:6px}
+.browser .bar .dots i{width:12px;height:12px;border-radius:50%;background:#9d978a;display:block}
+.browser .url{flex:1;background:#f4f2ed;padding:10px 14px;font-family:var(--fm);font-size:15px;color:#3a3a3a;
+    display:flex;align-items:center;gap:10px;cursor:pointer;flex-wrap:wrap}
+.browser .url .lock{color:var(--rata);font-size:13px}
+.browser .url b{font-weight:500;background:rgba(196,71,44,.18)}
+.portal{background:#fff;color:#1a1a1a;padding:56px 40px;text-align:center}
+.portal.bank{padding:44px 40px}
+.portal .crest{width:64px;height:64px;background:#1a5fb4;color:#fff;margin:0 auto 18px;display:grid;place-items:center;
+    font-family:var(--fd);font-weight:900;font-size:26px}
+.portal.bank .crest{background:#0B6B4F;border-radius:50%}
+.portal h2{font-family:var(--fb);font-weight:700;font-size:24px;margin-bottom:6px}
+.portal .sub{color:#666;font-size:15px;margin-bottom:28px}
+.portal form{max-width:380px;margin:0 auto;text-align:left}
+.portal label{display:block;font-size:14px;font-weight:600;margin:0 0 6px}
+.portal input{width:100%;padding:13px 14px;font-size:16px;border:1px solid #bbb;margin-bottom:18px;font-family:var(--fb)}
+.portal button{width:100%;padding:14px;background:#1a5fb4;color:#fff;border:0;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--fb)}
+.portal.bank button{background:#0B6B4F}
+.portal .small{font-size:13px;color:#888;margin-top:18px;text-align:center}
+.escape{margin-top:20px;text-align:center}
+.escape button{background:none;border:1px solid var(--hair);color:var(--warm);padding:12px 22px;
+    font-family:var(--fm);font-size:13px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.escape button:hover{border-color:var(--kowhai);color:var(--kowhai)}
+
+/* ===========================================
+   OUTCOME PANELS
+   =========================================== */
+.panel{background:var(--bone);color:var(--ink);padding:38px 40px;box-shadow:18px 22px 0 rgba(0,0,0,.25)}
+.panel.bad{border-top:14px solid var(--rata)}
+.panel.warn{border-top:14px solid var(--kowhai)}
+.panel.good{border-top:14px solid var(--green)}
+.panel .kicker{font-family:var(--fm);font-size:13px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+.panel.bad .kicker{color:var(--rata)}
+.panel.warn .kicker{color:#9A6D00}
+.panel.good .kicker{color:var(--green)}
+.panel h2{font-family:var(--fd);font-weight:900;font-size:clamp(26px,3.2vw,38px);line-height:1.08;margin-bottom:16px}
+.panel p{font-size:17px;line-height:1.55;color:var(--ink-soft);max-width:72ch;margin-bottom:14px}
+.panel p strong{color:var(--ink)}
+.steps{counter-reset:s;margin:22px 0 6px;border-top:3px solid var(--ink)}
+.steps li{list-style:none;counter-increment:s;display:flex;gap:18px;padding:15px 0;border-bottom:1px solid rgba(16,26,22,.14);
+    font-size:17px;line-height:1.4}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--fd);font-weight:900;font-size:24px;
+    color:var(--rata);flex:0 0 46px}
+.numbers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:24px}
+.numbers div{background:var(--ink);color:var(--bone);padding:16px 18px}
+.numbers .n{font-family:var(--fm);font-size:17px;color:var(--kowhai);margin-top:6px}
+.numbers .t{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-family:var(--fm);color:rgba(243,238,225,.7)}
+
+/* ===========================================
+   DEBRIEF
+   =========================================== */
+.debrief{margin-top:26px;background:var(--board-2);border:1px solid var(--hair);padding:32px}
+.debrief h3{font-family:var(--fd);font-weight:900;font-size:26px;color:var(--bone);margin-bottom:18px}
+.signlist{display:grid;gap:12px}
+.signlist div{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--hair)}
+.signlist div:last-child{border-bottom:0}
+.signlist .mark{flex:0 0 30px;height:30px;display:grid;place-items:center;font-family:var(--fm);font-size:15px;
+    background:var(--hair);color:var(--warm-dim)}
+.signlist div.on .mark{background:var(--kowhai);color:var(--ink)}
+.signlist .txt{font-size:16px;line-height:1.4;color:var(--warm)}
+.signlist .txt span{display:block;color:var(--warm-dim);font-size:15px;margin-top:4px}
+.debrief .close{font-size:16px;line-height:1.5;color:var(--warm-dim);margin-top:20px;max-width:78ch}
+
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.actions button{background:var(--kowhai);border:0;color:var(--ink);padding:16px 28px;font-family:var(--fb);
+    font-weight:700;font-size:16px;cursor:pointer}
+.actions button.ghost{background:none;border:1px solid var(--hair);color:var(--warm)}
+.actions button:hover{opacity:.9}
+
+.tip{margin-top:16px;font-family:var(--fm);font-size:13px;letter-spacing:.08em;color:var(--warm-dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="banner"><b>Practice drill</b> &middot; This is a training exercise &middot; The school, the bank, the senders and the websites are invented &middot; Nothing you type leaves this page</div>
+
+<div class="wrap">
+
+<header class="top">
+    <div class="eyebrow">Section 03 &middot; Find the scam before you click</div>
+    <h1 id="pageTitle">Find the scam before you click</h1>
+    <p class="lede" id="pageLede"></p>
+
+    <div class="picker">
+        <button id="pick-email" class="on" onclick="setScenario('email')">
+            <span class="tag">Scam 01 &middot; Email</span>
+            <span class="name">The fake login page</span>
+            <span class="desc">A message about your school mailbox sends you to a page that copies your staff portal.</span>
+        </button>
+        <button id="pick-text" onclick="setScenario('text')">
+            <span class="tag">Scam 04 &middot; Text message</span>
+            <span class="name">The bank text and the code request</span>
+            <span class="desc">A payment alert arrives by text. Then the bank phones you and asks for your code.</span>
+        </button>
+    </div>
+
+    <div class="score">
+        <span class="pips" id="pips"></span>
+        <span class="label" id="scoreLabel">0 of 5 signs found</span>
+    </div>
+</header>
+
+<!-- ==================================================================== -->
+<!-- SCENARIO 1: EMAIL                                                     -->
+<!-- ==================================================================== -->
+
+<section class="screen on" id="s-inbox">
+    <div class="mail">
+        <div class="chrome"><span>School mail &middot; Inbox</span><span>Tuesday 08:14</span></div>
+        <div class="rows">
+            <div class="row unread" onclick="go('mail')">
+                <span class="who"><span class="dot"></span>IT Helpdesk</span>
+                <span class="what">Action required: your mailbox is full <span>&mdash; Your account will close in 24 hours...</span></span>
+                <span class="when">08:14</span>
+            </div>
+            <div class="row">
+                <span class="who">Te Awa Valley Office</span>
+                <span class="what">Room 12 window repair <span>&mdash; The glazier comes on Thursday.</span></span>
+                <span class="when">Mon</span>
+            </div>
+            <div class="row">
+                <span class="who">Payroll</span>
+                <span class="what">Your payslip is ready <span>&mdash; Open the payroll site from your bookmark.</span></span>
+                <span class="when">Mon</span>
+            </div>
+        </div>
+    </div>
+    <p class="tip">Click the top message to open it</p>
+</section>
+
+<section class="screen" id="s-mail">
+    <div class="mail">
+        <div class="chrome"><span>School mail &middot; Message</span><span>Tuesday 08:14</span></div>
+        <div class="head">
+            <div class="subject">Action required: your mailbox is full</div>
+            <div class="from">From: IT Helpdesk &lt;<span class="sign" data-sign="e0">it-helpdesk@teawavaIley-school.nz</span>&gt;<br>To: you@teawavalley.school.nz</div>
+        </div>
+        <div class="body">
+            <p>Kia ora,</p>
+            <p>Our records show your mailbox has reached its storage limit. <span class="sign" data-sign="e1">You must act now.</span> <span class="sign" data-sign="e2">Your account will close in 24 hours and you will lose all mail and files.</span></p>
+            <p>To keep your account open, sign in and <span class="sign" data-sign="e4">confirm your password</span> on the staff portal.</p>
+            <p><a class="btn-fake" id="fakeBtn" onclick="clickedLink()">Keep my account open</a></p>
+            <p>Thank you for your fast action.</p>
+            <div class="sig">Te Awa Valley School &middot; IT Helpdesk<br>This mailbox is not monitored.</div>
+        </div>
+        <div class="statusbar">
+            <span class="k">Link</span>
+            <span id="statusText">Hover the blue button to see where it really goes</span>
+        </div>
+    </div>
+
+    <div class="choices">
+        <button class="choice" onclick="clickedLink()">Click the button<small>Do what the message asks</small></button>
+        <button class="choice" onclick="checkSender()">Read the full sender address<small>Look at the domain name letter by letter</small></button>
+        <button class="choice" onclick="finishSafe('bookmark')">Open the portal from my own bookmark<small>Ignore the link in the message</small></button>
+        <button class="choice" onclick="finishSafe('report')">Report it to IT and delete it<small>Tell somebody, then remove the message</small></button>
+    </div>
+    <p class="tip">Click any suspicious words in the message to mark a sign</p>
+</section>
+
+<section class="screen" id="s-portal">
+    <div class="browser">
+        <div class="bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="url sign" data-sign="e0">
+                <span class="lock">&#9888; Not secure</span>
+                <span>https://teawava<b>I</b>ley-school.nz/staff/mail/signin</span>
+            </span>
+        </div>
+        <div class="portal">
+            <div class="crest">TA</div>
+            <h2>Te Awa Valley School</h2>
+            <p class="sub">Sign in to keep your mailbox open</p>
+            <form onsubmit="return submitPortal(event)">
+                <label for="p1">Email address</label>
+                <input id="u1" type="text" value="you@teawavalley.school.nz" autocomplete="off">
+                <label for="p1">Password</label>
+                <input id="p1" type="password" placeholder="Type anything — it is never stored" autocomplete="off">
+                <button type="submit">Sign in</button>
+            </form>
+            <p class="small">Session will expire in 23 hours 41 minutes</p>
+        </div>
+    </div>
+    <div class="escape"><button onclick="finishSafe('backedout')">Stop. Close this page and go back.</button></div>
+    <p class="tip">Look at the address bar before you type</p>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SCENARIO 2: BANK TEXT                                                 -->
+<!-- ==================================================================== -->
+
+<section class="screen" id="s-sms">
+    <div class="stage">
+        <div class="phone">
+            <div class="glass">
+                <div class="ios-status"><span>15:42</span><span>&#9673; &#9662; 78%</span></div>
+                <div class="ios-nav">
+                    <div class="avatar">AM</div>
+                    <div class="name sign" data-sign="t0">Aotearoa Mutual</div>
+                </div>
+                <div class="thread">
+                    <div class="tstamp">Thursday 09:05</div>
+                    <div class="bubble them">Aotearoa Mutual: Your card ending 4417 was used at AWA VALLEY GROCER for $86.20. Not you? Call the number on the back of your card.</div>
+                    <div class="tstamp">Today 15:42</div>
+                    <div class="bubble them new">Aotearoa Mutual: <span class="sign" data-sign="t2">A payment of $1,480.00 to a NEW PAYEE was started on your account.</span> <span class="sign" data-sign="t1">If this was not you, stop it within 30 minutes</span> at <span class="smslink sign" data-sign="t3" onclick="tappedSmsLink()">aotearoamutual-secure.nz/stop</span> or reply STOP.</div>
+                </div>
+                <div class="ios-input"><span class="box">Text message</span><span>&#9650;</span></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="statusbar" style="margin-bottom:22px">
+                <span class="k">Link</span>
+                <span id="smsStatus">Tap the blue link to see where it really goes</span>
+            </div>
+            <div class="choices">
+                <button class="choice" onclick="tappedSmsLink()">Tap the link<small>Do what the text asks</small></button>
+                <button class="choice" onclick="repliedStop()">Reply STOP<small>Answer the message</small></button>
+                <button class="choice" onclick="finishSafe('cardnumber')">Phone the bank on the number on my card<small>Use a number the message did not give me</small></button>
+                <button class="choice" onclick="finishSafe('forward')">Forward it to 7726 and delete it<small>Report the text, then remove it</small></button>
+            </div>
+            <p class="tip">Click the suspicious parts of the text to mark a sign</p>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="s-bank">
+    <div class="browser">
+        <div class="bar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="url sign" data-sign="t3">
+                <span class="lock">&#9888; Not secure</span>
+                <span>https://aotearoamutual-<b>secure</b>.nz/stop/verify</span>
+            </span>
+        </div>
+        <div class="portal bank">
+            <div class="crest">AM</div>
+            <h2>Aotearoa Mutual</h2>
+            <p class="sub">Stop the payment of $1,480.00 &middot; 28 minutes remaining</p>
+            <form onsubmit="return submitBank(event)">
+                <label for="p2">Customer number</label>
+                <input id="u2" type="text" value="4417 8820" autocomplete="off">
+                <label for="p2">Password</label>
+                <input id="p2" type="password" placeholder="Type anything — it is never stored" autocomplete="off">
+                <button type="submit">Stop this payment</button>
+            </form>
+            <p class="small">Your session is protected</p>
+        </div>
+    </div>
+    <div class="escape"><button onclick="finishSafe('backedout')">Stop. Close this page and go back.</button></div>
+    <p class="tip">The real bank address is aotearoamutual.co.nz — read this one again</p>
+</section>
+
+<section class="screen" id="s-call">
+    <div class="stage">
+        <div class="phone">
+            <div class="callscreen">
+                <div>
+                    <div class="label">Aotearoa Mutual &middot; Fraud team</div>
+                    <div class="who">0800 100 400</div>
+                    <div class="num">Mobile &middot; New Zealand</div>
+                    <div class="ring">Calling&hellip;</div>
+                </div>
+                <div class="callbtns">
+                    <div><button class="no" onclick="finishSafe('hungup')">&#9587;</button><span>Decline</span></div>
+                    <div><button class="yes" onclick="go('incall')">&#9742;</button><span>Answer</span></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="panel warn" style="box-shadow:14px 18px 0 rgba(0,0,0,.25)">
+                <div class="kicker">Two minutes later</div>
+                <h2 style="font-size:30px">The phone rings</h2>
+                <p>You typed your password into the page. The criminal is now signing in to your real bank. The bank sends a one-time code to your phone, so the criminal needs you to read it out.</p>
+                <p><strong>The caller ID says the bank.</strong> Criminals can put any name and any number on your screen. Caller ID proves nothing.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="s-incall">
+    <div class="stage">
+        <div class="phone">
+            <div class="transcript">
+                <div class="who">On the call &middot; 00:41</div>
+                <p>"Kia ora, this is Daniel from the Aotearoa Mutual fraud team. <span class="sign" data-sign="t1">We have stopped a payment of $1,480 but I only have a few minutes.</span>"</p>
+                <p>"<span class="sign" data-sign="t4">I have sent a security code to your phone. Read it back to me so I can cancel the payment.</span>"</p>
+                <div class="code">
+                    <span>Text message just now</span>
+                    <b>704 118</b>
+                    <span style="margin-top:8px;display:block">Never share this code with anybody</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="choices">
+                <button class="choice" onclick="gaveCode()">Read the code out<small>Do what the caller asks</small></button>
+                <button class="choice" onclick="finishSafe('refused')">Refuse. Hang up and phone the number on my card<small>Nobody legitimate needs your code</small></button>
+            </div>
+            <p class="tip">Read the text that carried the code before you decide</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================================================================== -->
+<!-- SHARED OUTCOME SCREENS                                                -->
+<!-- ==================================================================== -->
+
+<section class="screen" id="s-result">
+    <div class="panel" id="resultPanel">
+        <div class="kicker">Drill result</div>
+        <h2 id="resultTitle"></h2>
+        <div id="resultBody"></div>
+        <ol class="steps" id="resultSteps"></ol>
+        <div class="numbers" id="resultNumbers"></div>
+    </div>
+</section>
+
+<section class="screen" id="s-debrief">
+    <div class="debrief">
+        <h3 id="debriefTitle">The five signs in this message</h3>
+        <div class="signlist" id="signList"></div>
+        <p class="close" id="debriefClose"></p>
+    </div>
+    <div class="actions">
+        <button onclick="restart()">Run this drill again</button>
+        <button class="ghost" onclick="reveal()">Show every sign</button>
+        <button class="ghost" onclick="setScenario(cur === 'email' ? 'text' : 'email')">Try the other scam</button>
+    </div>
+</section>
+
+</div>
+
+<script>
+/* ====================================================================
+   SCENARIO DATA
+   Each scenario owns its five signs, its opening screen, and its copy.
+   Sign keys are prefixed (e0..e4, t0..t4) so the two sets never mix.
+   ==================================================================== */
+const SCENARIOS = {
+    email: {
+        prefix:'e', start:'s-inbox',
+        title:'Find the scam before you click',
+        lede:'Phishing is the scam New Zealanders report most often, and the fake login page is the form that reaches school staff first. Read the message below. Find the warning signs. Then decide what to do.',
+        debrief:'The five signs in this message',
+        close:'The spelling was correct. The logo was correct. Criminals now use artificial intelligence, so good spelling proves nothing. Read the sender address and read the web address.',
+        signs:[
+            ['A strange sender','teawava<b>I</b>ley-school.nz uses a capital I in place of a lower case l. Your school domain is teawavalley.school.nz.'],
+            ['Hurry','"You must act now." A real organisation gives you time.'],
+            ['Fear','"Your account will close and you will lose all mail and files." Fear stops your normal checks.'],
+            ['A link','The button hides its true destination. Hovering shows the real domain.'],
+            ['A change to access','The message asks you to confirm a password. Nobody legitimate ever asks for this.']
+        ]
+    },
+    text: {
+        prefix:'t', start:'s-sms',
+        title:'Find the scam before you tap',
+        lede:'A bank text is the scam that reaches your personal phone. It lands in the same thread as your real bank messages, and it works because a phone call follows it. Read the text. Find the warning signs. Then decide what to do.',
+        debrief:'The five signs in this text and call',
+        close:'The text sat under real bank messages, so it looked like part of the same conversation. Criminals fake the sender name, and they fake the caller ID that follows. Trust the number on the back of your card. Trust nothing that a message hands you.',
+        signs:[
+            ['A strange sender','The text joined the thread of real bank messages. Criminals fake the sender name, so a familiar thread proves nothing.'],
+            ['Hurry','"Within 30 minutes." Then on the call, "I only have a few minutes." Hurry stops you from checking.'],
+            ['Fear','A payment of $1,480 to a new payee. The number is large enough to frighten you and small enough to believe.'],
+            ['A link','aotearoamutual-secure.nz is not your bank. Your bank is aotearoamutual.co.nz. The extra word is the whole trick.'],
+            ['A change to money or access','The text moves money and the caller asks for your one-time code. Your bank never asks you to read a code out.']
+        ]
+    }
+};
+
+/* Universal recovery steps and report numbers */
+const STEPS = [
+    'Disconnect the device from the network.',
+    'Tell your school IT contact and your principal immediately.',
+    'Change the password from a different device.',
+    'Write down what happened, and the time.',
+    'Tell the bank if you gave financial details.'
+];
+const NUM_SCHOOL = [['Cyber incident','NCSC 0800 114 115'],['Any scam','Netsafe 0508 638 723'],['Privacy breach','privacy.org.nz — NotifyUs']];
+const NUM_BANK   = [['Your bank','The number on your card'],['Crime with a loss','Police 105'],['Scam text message','Forward it to 7726'],['Any scam','Netsafe 0508 638 723']];
+
+let cur = 'email';
+const found = new Set();
+
+/* ====================================================================
+   SIGN TRACKING
+   ==================================================================== */
+function buildSigns(){
+    const S = SCENARIOS[cur];
+    const pips = document.getElementById('pips');
+    const list = document.getElementById('signList');
+    pips.innerHTML = ''; list.innerHTML = '';
+    S.signs.forEach((s, i) => {
+        pips.insertAdjacentHTML('beforeend', `<span class="pip" data-pip="${i}"></span>`);
+        list.insertAdjacentHTML('beforeend',
+            `<div data-row="${i}"><span class="mark">${String(i+1).padStart(2,'0')}</span>
+             <span class="txt">${s[0]}<span>${s[1]}</span></span></div>`);
+    });
+    document.getElementById('scoreLabel').textContent = '0 of 5 signs found';
+    document.getElementById('debriefTitle').textContent = S.debrief;
+    document.getElementById('debriefClose').textContent = S.close;
+}
+
+function markSign(key){
+    if (key[0] !== SCENARIOS[cur].prefix || found.has(key)) return;
+    found.add(key);
+    const i = Number(key.slice(1));
+    document.querySelectorAll(`[data-sign="${key}"]`).forEach(el => el.classList.add('found'));
+    document.querySelector(`[data-pip="${i}"]`).classList.add('on');
+    document.querySelector(`[data-row="${i}"]`).classList.add('on');
+    document.getElementById('scoreLabel').textContent = `${found.size} of 5 signs found`;
+}
+document.querySelectorAll('.sign').forEach(el =>
+    el.addEventListener('click', () => markSign(el.dataset.sign)));
+
+/* ====================================================================
+   SCREENS
+   ==================================================================== */
+function go(name){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+    document.getElementById('s-' + name.replace(/^s-/, '')).classList.add('on');
+    window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function setScenario(key){
+    cur = key;
+    found.clear();
+    document.querySelectorAll('.sign.found').forEach(el => el.classList.remove('found'));
+    document.getElementById('pick-email').classList.toggle('on', key === 'email');
+    document.getElementById('pick-text').classList.toggle('on', key === 'text');
+    document.getElementById('pageTitle').textContent = SCENARIOS[key].title;
+    document.getElementById('pageLede').textContent = SCENARIOS[key].lede;
+    document.getElementById('p1').value = '';
+    document.getElementById('p2').value = '';
+    buildSigns();
+    go(SCENARIOS[key].start);
+}
+
+/* Show a result panel plus the debrief */
+function result(kind, title, bodyHtml, steps, numbers){
+    const panel = document.getElementById('resultPanel');
+    panel.className = 'panel ' + kind;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultBody').innerHTML = bodyHtml;
+    document.getElementById('resultSteps').innerHTML = steps ? steps.map(t => `<li>${t}</li>`).join('') : '';
+    document.getElementById('resultNumbers').innerHTML = numbers.map(n =>
+        `<div><span class="t">${n[0]}</span><div class="n">${n[1]}</div></div>`).join('');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+    document.getElementById('s-result').classList.add('on');
+    document.getElementById('s-debrief').classList.add('on');
+    window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ====================================================================
+   SCENARIO 1 — EMAIL
+   ==================================================================== */
+const fakeBtn = document.getElementById('fakeBtn');
+const statusText = document.getElementById('statusText');
+fakeBtn.addEventListener('mouseenter', () => {
+    statusText.innerHTML = 'https://teawava<em>I</em>ley-school.nz/staff/mail/signin?id=8841 &nbsp;— this is NOT your school';
+    markSign('e3');
+});
+fakeBtn.addEventListener('mouseleave', () => {
+    statusText.textContent = 'Hover the blue button to see where it really goes';
+});
+function clickedLink(){ markSign('e3'); go('portal'); }
+function checkSender(){
+    markSign('e0');
+    statusText.innerHTML = 'Sender domain: teawava<em>I</em>ley-school.nz &nbsp;— your school is teawavalley.school.nz';
+}
+
+/* The password is never read, never kept, never sent.
+   Only its length is counted, then the field is cleared. */
+function submitPortal(e){
+    e.preventDefault();
+    const f = document.getElementById('p1');
+    const n = f.value.length; f.value = '';
+    result('bad', 'The criminal now has your password', `
+        <p>${n ? `You typed <strong>${n} characters</strong> into a page that is not your school. This drill counted them and threw them away. A real fake login page keeps every one of them.`
+               : `You pressed sign in on a page that is not your school. A real fake login page keeps whatever you type, even a wrong password — it tells the criminal how you build your passwords.`}</p>
+        <p>The page sat on a domain with <strong>one changed letter</strong>: a capital <strong>I</strong> in place of a lower case <strong>l</strong>. Your real portal never asks you to confirm a password by email.</p>
+        <p><strong>In a real attack the criminal signs in within minutes.</strong> They read your mail, they reach your student records, and they send the same message to your colleagues from your address.</p>`,
+        STEPS, NUM_SCHOOL);
+    return false;
+}
+
+/* ====================================================================
+   SCENARIO 2 — BANK TEXT
+   ==================================================================== */
+const smsStatus = document.getElementById('smsStatus');
+document.querySelectorAll('.smslink').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+        smsStatus.innerHTML = 'aotearoamutual-<em>secure</em>.nz &nbsp;— your bank is aotearoamutual.co.nz';
+        markSign('t3');
+    });
+    el.addEventListener('mouseleave', () => { smsStatus.textContent = 'Tap the blue link to see where it really goes'; });
+});
+function tappedSmsLink(){ markSign('t3'); go('bank'); }
+
+function repliedStop(){
+    result('warn', 'You told the criminal your number is real', `
+        <p>Replying does not stop anything. It confirms that a person reads this number, so the criminal moves you up the list. Expect more texts, and expect a phone call.</p>
+        <p><strong>Never reply to a scam text, not even to refuse.</strong> Forward it to 7726, then delete it.</p>
+        <p>Your money is safe for now. Phone your bank on the number on the back of your card and tell them the text arrived.</p>`,
+        null, NUM_BANK);
+}
+
+function submitBank(e){
+    e.preventDefault();
+    const f = document.getElementById('p2');
+    f.value = '';
+    go('call');                     // the phone call is the second half of this scam
+    return false;
+}
+
+function gaveCode(){
+    markSign('t4');
+    result('bad', 'The criminal is inside your bank account', `
+        <p>The code was the last lock. Your two-factor authentication worked exactly as it should — it sent the code to <strong>you</strong>, not to the criminal. Reading it out handed it over.</p>
+        <p><strong>Your bank never asks you to read a code back.</strong> Neither does your school, your principal, or your IT team. A caller who asks for a code is a criminal, whatever the screen says.</p>
+        <p>Phone your bank now on the number on the back of your card. Do not use any number from the text or from the call.</p>`,
+        STEPS, NUM_BANK);
+}
+
+/* ====================================================================
+   SAFE AND PARTIAL OUTCOMES
+   ==================================================================== */
+const OUTCOMES = {
+    bookmark: ['good','You did not give anything away',
+        `<p>You opened the portal from your own bookmark, so you typed your password into the real site. The link in the message never touched your account. This is the habit that stops this scam every time.</p>`, NUM_SCHOOL],
+    report: ['good','You did the best thing available',
+        `<p>You reported the message and deleted it. Your IT contact can now block the sender and warn every other teacher. Reporting is the step most people skip.</p>`, NUM_SCHOOL],
+    backedout: ['good','You stopped in time',
+        `<p>You read the web address and you closed the page. Nothing left your device. Tell your IT contact anyway — they need to know the message arrived.</p>`, NUM_SCHOOL],
+    cardnumber: ['good','You used a number the scam did not give you',
+        `<p>The bank told you no payment exists. This is the one check that always works: phone the number on the back of your card. A criminal cannot control that number.</p>`, NUM_BANK],
+    forward: ['good','You did the best thing available',
+        `<p>You forwarded the text to 7726 and deleted it. The Department of Internal Affairs uses these reports to block the sender. Forwarding is free and it takes ten seconds.</p>`, NUM_BANK],
+    hungup: ['warn','You declined the call, but your password is gone',
+        `<p>You did not answer, so the criminal never got the code and the payment did not go through. That is the good half.</p>
+         <p><strong>The bad half is your password.</strong> You typed it into the fake page, and the criminal will try it on your email, your school login, and every other account. Change it now, on every account that shares it.</p>`, NUM_BANK],
+    refused: ['warn','You refused the code, and that saved the money',
+        `<p>You did the right thing on the call. Without the code the criminal cannot finish the payment. Nobody legitimate ever needs your one-time code.</p>
+         <p><strong>Your password is still gone.</strong> You typed it into the fake page before the call. Change it now, on every account that shares it, and phone the bank on the number on your card.</p>`, NUM_BANK]
+};
+function finishSafe(kind){
+    const o = OUTCOMES[kind];
+    result(o[0], o[1], o[2], null, o[3]);
+}
+
+/* ====================================================================
+   CONTROLS
+   ==================================================================== */
+function reveal(){
+    SCENARIOS[cur].signs.forEach((_, i) => markSign(SCENARIOS[cur].prefix + i));
+    go(SCENARIOS[cur].start);
+}
+function restart(){ setScenario(cur); }
+
+buildSigns();
+setScenario('email');
+</script>
+</body>
+</html>
